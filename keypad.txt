@@ -1,0 +1,127 @@
+#include <LiquidCrystal_I2C.h>
+#include <Keypad.h>
+
+// Define LCD I2C address (replace with your LCD's address)
+const int lcdAddress = 0x27;
+
+// Define motor pins (replace with your motor driver connections)
+// These pins are used for illustration, you'll likely need a motor driver circuit
+const int motorPin1 = 8;
+const int motorPin2 = 9;
+
+// Define keypad rows and columns
+const byte ROWS = 4;
+const byte COLS = 3;
+char keys[ROWS][COLS] = {
+  {'1', '2', '3'},
+  {'4', '5', '6'},
+  {'7', '8', '9'},
+  {'*', '0', '#'}
+};
+byte rowPins[ROWS] = {A0, A1, A2, A3}; // Connect to the row pinouts of the keypad
+byte colPins[COLS] = {2, 3, 4}; // Connect to the column pinouts of the keypad
+
+// Define the correct pin
+char correctPin[] = "12345";
+char enteredPin[6]; // Buffer for entered pin
+
+LiquidCrystal_I2C lcd(lcdAddress, 16, 2);
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
+void setup() {
+  // Set up LCD
+  lcd.init();
+  lcd.backlight();  // Optional: Turn on backlight
+
+  // Set motor pins as output (modify for your motor driver)
+  pinMode(motorPin1, OUTPUT);
+  pinMode(motorPin2, OUTPUT);
+
+  // Display welcome message
+  lcd.print("UNLOCK PIN");
+}
+
+void loop() {
+  // Ask user to enter unlock pin
+  lcd.setCursor(0, 1);
+  getEnteredPin();
+
+  // Check pin to unlock
+  if (strcmp(enteredPin, correctPin) == 0) {
+    lcd.clear();
+    lcd.print("PIN CORRECT");
+    unlockDoor();
+  } else {
+    lcd.clear();
+    lcd.print("WRONG PIN");
+    delay(1000);
+    lcd.clear();
+    lcd.print("UNLOCK PIN");
+  }
+
+  delay(2000);
+  
+  // Ask user to enter lock pin
+  lcd.setCursor(0, 0);
+  lcd.print("LOCK PIN");
+  lcd.setCursor(0, 1);
+  getEnteredPin();
+
+  // Check pin to lock
+  if (strcmp(enteredPin, correctPin) == 0) {
+    lcd.clear();
+    lcd.print("PIN CORRECT");
+    lockDoor();
+  } else {
+    lcd.clear();
+    lcd.print("WRONG PIN");
+    delay(1000);
+    lcd.clear();
+    lcd.print("LOCK PIN");
+  }
+
+  delay(2000);
+}
+
+void getEnteredPin() {
+  int index = 0;
+  while (index < 5) {
+    char key = keypad.getKey();
+    if (key) {
+      enteredPin[index] = key;
+      lcd.print('*');
+      index++;
+    }
+  }
+  enteredPin[5] = '\0'; // Null-terminate the string
+}
+
+void unlockDoor() {
+  // Control motor to unlock (replace with your motor driver logic)
+  // This example assumes a simple motor driver connected:
+  // - motorPin1: connected to motor driver IN1 for forward direction
+  // - motorPin2: connected to motor driver IN2 for backward direction
+  digitalWrite(motorPin1, HIGH);
+  digitalWrite(motorPin2, LOW);
+  lcd.setCursor(0, 1);
+  lcd.print("DOOR OPENING");
+  delay(10000); // Adjust delay for unlocking duration
+
+  // Stop motor after unlocking (modify for your motor driver)
+  digitalWrite(motorPin1, LOW);
+  digitalWrite(motorPin2, LOW);
+}
+
+void lockDoor() {
+  // Control motor to lock (replace with your motor driver logic)
+  // Invert motor control for locking (assuming same motor driver)
+  digitalWrite(motorPin1, LOW);
+  digitalWrite(motorPin2, HIGH);
+  lcd.setCursor(0, 1);
+  lcd.print("DOOR CLOSING");
+  delay(10000); // Adjust delay for locking duration
+
+  // Stop motor after locking (modify for your motor driver)
+  digitalWrite(motorPin1, LOW);
+  digitalWrite(motorPin2, LOW);
+}

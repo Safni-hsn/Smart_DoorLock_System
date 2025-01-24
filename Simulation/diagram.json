@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "author": "Sajishvar Mohan",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -19.2, "left": -148.76, "attrs": {} },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": -147.2,
+      "left": 44,
+      "attrs": { "pins": "i2c" }
+    },
+    { "type": "wokwi-servo", "id": "servo1", "top": 247.6, "left": -182.4, "attrs": {} },
+    { "type": "wokwi-membrane-keypad", "id": "keypad1", "top": 26.8, "left": 63.2, "attrs": {} },
+    {
+      "type": "wokwi-pir-motion-sensor",
+      "id": "pir1",
+      "top": -101.6,
+      "left": -429.78,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:21", "lcd1:SDA", "green", [ "h38.4", "v-153.8" ] ],
+    [ "esp:22", "lcd1:SCL", "green", [ "h67.2", "v-115.5" ] ],
+    [ "lcd1:VCC", "esp:5V", "red", [ "v0.1", "h-249.6", "v288" ] ],
+    [ "lcd1:GND", "esp:GND.1", "black", [ "h-220.8", "v249.6" ] ],
+    [ "servo1:PWM", "esp:15", "green", [ "h-28.8", "v-86.2", "h163.2" ] ],
+    [ "servo1:GND", "esp:GND.1", "black", [ "h-115.2", "v-144", "h134.4", "v-19.2" ] ],
+    [ "servo1:V+", "esp:5V", "red", [ "h-76.8", "v-105.5", "h96", "v-19.2" ] ],
+    [ "keypad1:R1", "esp:14", "green", [ "v28.8", "h-556.8", "v-278.4" ] ],
+    [ "keypad1:R2", "esp:27", "green", [ "v38.4", "h-518.8", "v-297.6" ] ],
+    [ "keypad1:R3", "esp:26", "green", [ "v48", "h-509.1", "v-316.8" ] ],
+    [ "keypad1:R4", "esp:25", "green", [ "v57.6", "h-614.6", "v-336" ] ],
+    [ "keypad1:C1", "esp:33", "green", [ "v76.8", "h-672.1", "v-364.8" ] ],
+    [ "keypad1:C2", "esp:32", "green", [ "v96", "h-700.8", "v-393.6" ] ],
+    [ "esp:13", "keypad1:C3", "green", [ "h-374.25", "v355.2", "h739.35" ] ],
+    [ "esp:12", "keypad1:C4", "green", [ "v9.6", "h-431.85", "v374.4", "h806.4" ] ],
+    [ "pir1:OUT", "esp:4", "green", [ "v9.6", "h345.46", "v124.8" ] ],
+    [ "pir1:VCC", "esp:5V", "red", [ "v19.2", "h19.2", "v172.8" ] ],
+    [ "pir1:GND", "esp:GND.1", "black", [ "h38.14", "v134.4", "h191.85" ] ]
+  ],
+  "dependencies": {}
+}
